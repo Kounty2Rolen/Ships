@@ -1,6 +1,13 @@
 ﻿//BattleShips Copyright (C) 2020 Daniil Molodtsov (molodcovdaniil123@gmail.com)
 /*
-Это программа является свободным программным обеспечением. Вы можете распространять и/или модифицировать её согласно условиям Стандартной Общественной Лицензии GNU, опубликованной Фондом Свободного Программного Обеспечения, версии 3 или, по Вашему желанию, любой более поздней версии. Эта программа распространяется в надежде, что она будет полезной, но БЕЗ ВСЯКИХ ГАРАНТИЙ, в том числе подразумеваемых гарантий ТОВАРНОГО СОСТОЯНИЯ ПРИ ПРОДАЖЕ и ГОДНОСТИ ДЛЯ ОПРЕДЕЛЁННОГО ПРИМЕНЕНИЯ. Смотрите Стандартную Общественную Лицензию GNU для получения дополнительной информации. Вы должны были получить копию Стандартной Общественной Лицензии GNU вместе с программой. В случае её отсутствия, посмотрите <http://www.gnu.org/licenses/>. 
+Это программа является свободным программным обеспечением.
+Вы можете распространять и/или модифицировать её согласно условиям Стандартной Общественной Лицензии GNU,
+опубликованной Фондом Свободного Программного Обеспечения, версии 3 или, по Вашему желанию,
+любой более поздней версии. Эта программа распространяется в надежде, что она будет полезной, 
+но БЕЗ ВСЯКИХ ГАРАНТИЙ, в том числе подразумеваемых гарантий ТОВАРНОГО СОСТОЯНИЯ ПРИ ПРОДАЖЕ и ГОДНОСТИ ДЛЯ ОПРЕДЕЛЁННОГО ПРИМЕНЕНИЯ.
+Смотрите Стандартную Общественную Лицензию GNU для получения дополнительной информации. 
+Вы должны были получить копию Стандартной Общественной Лицензии GNU вместе с программой. 
+В случае её отсутствия, посмотрите <http://www.gnu.org/licenses/>. 
 */
 using System;
 using System.Windows;
@@ -14,6 +21,8 @@ namespace BattleShips
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +49,7 @@ namespace BattleShips
             }
         }
 
-        private void botTurn(Button button=null)
+        private void botTurn(Button button = null)
         {
             P2Lock.Fill = Brushes.Transparent;
             Random random = new Random((new Random().Next(0, 99999) * DateTime.Now.Hour) / new Random().Next(1, 10));
@@ -50,29 +59,24 @@ namespace BattleShips
             Button _btn = new Button();
             int xP = 0;
             int yP = 0;
-            if (button == null)
+
+            foreach (var item in Player1Grid.Children)
             {
-                foreach (var item in Player1Grid.Children)
+                if (item.GetType() == typeof(Button))
                 {
-                    if (item.GetType() == typeof(Button))
+                    var btn = item as Button;
+                    xP = Convert.ToInt32(btn.Tag.ToString().Split(',')[0]);
+                    yP = Convert.ToInt32(btn.Tag.ToString().Split(',')[1]);
+                    if (x == xP && y == yP)
                     {
-                        var btn = item as Button;
-                        xP = Convert.ToInt32(btn.Tag.ToString().Split(',')[0]);
-                        yP = Convert.ToInt32(btn.Tag.ToString().Split(',')[1]);
-                        if (x == xP && y == yP)
-                        {
-                            _btn = btn;
-                            break;
-                        }
+                        _btn = btn;
+                        break;
                     }
                 }
             }
-            else {
-                _btn = button;
-            }
             if (_btn.Background == Brushes.Red || _btn.Background == Brushes.Blue)
             {
-                botTurn(_btn);
+                botTurn();
             }
             if (ships != 20)
             {
@@ -83,6 +87,7 @@ namespace BattleShips
                         _btn.Background = Brushes.Red;
                         ships -= 1;
                         ScoreP2.Content = Convert.ToInt32(ScoreP2.Content) + 1;
+                        botTurn();
                     }
                 }
                 else
@@ -167,9 +172,8 @@ namespace BattleShips
             else
             {
                 _btn.Background = Brushes.Blue;
+                botTurn();
             }
-
-            botTurn();
             if (Convert.ToInt32(ScoreP1.Content) == 20)
             {
                 MessageBox.Show("You won!", "WOW", MessageBoxButton.OK, MessageBoxImage.Exclamation);
